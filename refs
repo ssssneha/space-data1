@@ -1,0 +1,10 @@
+def dms_to_deg(dms):
+    
+    d = dms[]
+    m = dms[:dms.index("deg")]
+    s = dms[:dms.index("deg")]
+    if d[0]=='-':
+    dd = float(d) - float(m)/60 - float(s)/3600
+    else:
+    dd = float(d) + float(m)/60 + float(s)/3600
+    return dd
