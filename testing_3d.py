@@ -45,24 +45,41 @@ def get_xyz(sat):
     pos = satellite.at(t)
     return pos.position.km
 
+def scale_xyz(pos):
+    x1 = int (((pos[0]*1000)/50000) + 1000)
+    y1 = int (((pos[1]*1000)/50000) + 1000)
+    z1 = int (((pos[2]*1000)/50000) + 1000)
+    arr = [x1,y1,z1]
+    return arr
+
 
 # output_loc_csv - json + output
 def output_loc_csv(json_data, output_file):
     total_counts = 0
     with open(output_file, 'w') as f:
         f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000">')
-        f.write('<g color="lightseagreen">')
+        f.write("<g>")
+        #lightcoral lightseagreen
+        #and sat["OBJECT_TYPE"] == "DEBRIS"
         for sat in json_data:
             if "OBJECT_TYPE" in sat:
+                if sat["OBJECT_TYPE"] == "DEBRIS":
+                    currentcolor = "lightcoral"
+                elif sat["OBJECT_TYPE"] == "PAYLOAD":
+                    currentcolor = "lightseagreen"
+                elif sat["OBJECT_TYPE"] == "ROCKET BODY":
+                    currentcolor = "gold"
+                elif sat["OBJECT_TYPE"] == "UNKNOWN":
+                    currentcolor = "mediumpurple"
                 pos = get_xyz(sat)
                 if not (math.isnan(pos[0]) or math.isnan(pos[1])):    
-                    x1 = int (((pos[0]*1000)/50000) + 1000)
-                    y1 = int (((pos[1]*1000)/50000) + 1000)
-                    f.write(f'<circle cx="{x1}" cy="{y1}" r="4" fill="currentcolor"/>')
+                    pos1 = scale_xyz(pos)
+                    f.write(f'<circle cx="{pos1[0]}" cy="{pos1[1]}" r="2" fill="{currentcolor}"/>')
                     total_counts += 1
                     if (total_counts % 1000 ==0):
                         print(f"{total_counts} records written")
-
+        earth_r = int (((6378*1000)/50000))
+        f.write(f'<circle cx="1000" cy="1000" r="{earth_r}" stroke="black" fill="transparent" stroke-width="2"/>')
         f.write("</g>")
         f.write("</svg>")
                 
