@@ -8,3 +8,15 @@ def dms_to_deg(dms):
     else:
     dd = float(d) + float(m)/60 + float(s)/3600
     return dd
+
+def read_json_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            csv_data = csv.read(file)
+            header = csv_data[:1]
+            rows = csv_data[1:]
+        return csv_data
+
+    except FileNotFoundError:
+        print(f"Error: File not found. Please check the file path.")
+        return None
