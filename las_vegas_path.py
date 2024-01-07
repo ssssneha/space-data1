@@ -2,6 +2,7 @@ import json
 import sys
 import math
 import csv
+import random
 
 # My modules
 import satellite
@@ -11,13 +12,43 @@ import bot
 # open_stream
 # loop through json data - for each one get xyz, name, ID, type
 # then write out to file and close
+def las_vegas_shuffle(path):
+    max_switches = 50
+    switches = int (random.random()*max_switches) + 1
+    length = len(path) - 1
+    
+    for i in range(switches):
+        a = int (random.random()*length)
+        b = int (random.random()*length)
+        temp = path[a]
+        path[a] = path[b]
+        path[b] = temp
+    return path
 
+def optimize_las_vegas(box_data, bot):
+    print("test")
+    best_bot = bot.create_similar()
+    best_bot.clean_ALL_debris(box_data)
+
+    print ("Starting Las Vegas Search")
+    for i in range(50000):
+        new_bot = best_bot.create_similar()
+        new_path = best_bot.path
+        new_path = las_vegas_shuffle(new_path)
+        new_bot.clean_ALL_debris(new_path)
+        if i%10000 == 0:
+            print (f"{i} iterations complete. Best dist is {best_bot.dist_travelled} ")
+        if new_bot.dist_travelled < best_bot.dist_travelled:
+            best_bot = new_bot
+            print(best_bot.dist_travelled)
+        
+    return best_bot
 
 def gen_greedy_path(box_data, bot):
 
     for i in range(len(box_data)):
         min_dist = -1
-        best_sat = box_data[0]
+        best_sat = None
         for sat in box_data:
             if not sat in bot.path:
                 dist = bot.get_dist_sat(sat)
@@ -25,13 +56,11 @@ def gen_greedy_path(box_data, bot):
                     min_dist = dist
                     best_sat = sat
 
-        
         if best_sat == None:
             print ("Something bad happened")
             sys.exit()
         #print(best_sat)
         bot.clean_debris(best_sat)
-        print(bot.dist_travelled)
     return bot
 
 # main 
@@ -54,7 +83,14 @@ if __name__ == "__main__":
     #print(sat_data)
     bot = bot.Bot(7250, 0, 0, 500)
     box_data = satutils.box_sat(sat_data, bot)
+
     bot = gen_greedy_path(box_data, bot)
+    print(bot.dist_travelled)
+    bot.print_path()
+
+    #bot = optimize_las_vegas(bot.path, bot)
+    #bot = optimize_las_vegas(box_data, bot)
+    
     print(bot.dist_travelled)
     print(bot.cleaned)
     bot.print_path()
