@@ -13,7 +13,7 @@ import bot
 # loop through json data - for each one get xyz, name, ID, type
 # then write out to file and close
 def las_vegas_shuffle(path):
-    max_switches = 50
+    max_switches = 20
     switches = int (random.random()*max_switches) + 1
     length = len(path) - 1
     
@@ -31,7 +31,7 @@ def optimize_las_vegas(box_data, bot):
     best_bot.clean_ALL_debris(box_data)
 
     print ("Starting Las Vegas Search")
-    for i in range(50000):
+    for i in range(400000):
         new_bot = best_bot.create_similar()
         new_path = best_bot.path
         new_path = las_vegas_shuffle(new_path)
@@ -40,12 +40,12 @@ def optimize_las_vegas(box_data, bot):
             print (f"{i} iterations complete. Best dist is {best_bot.dist_travelled} ")
         if new_bot.dist_travelled < best_bot.dist_travelled:
             best_bot = new_bot
-            print(best_bot.dist_travelled)
+            #print(best_bot.dist_travelled)
         
     return best_bot
 
 def gen_greedy_path(box_data, bot):
-
+    #print(bot)
     for i in range(len(box_data)):
         min_dist = -1
         best_sat = None
@@ -61,6 +61,8 @@ def gen_greedy_path(box_data, bot):
             sys.exit()
         #print(best_sat)
         bot.clean_debris(best_sat)
+        #print (best_sat)
+        #print (bot.dist_travelled)
     return bot
 
 # main 
@@ -81,16 +83,17 @@ if __name__ == "__main__":
     sat_data = satutils.get_sat_data(input_file)
 
     #print(sat_data)
-    bot = bot.Bot(7250, 0, 0, 500)
+    bot = bot.Bot(7250, 0, 0, 1000)
     box_data = satutils.box_sat(sat_data, bot)
 
     bot = gen_greedy_path(box_data, bot)
-    print(bot.dist_travelled)
-    bot.print_path()
-
-    #bot = optimize_las_vegas(bot.path, bot)
-    #bot = optimize_las_vegas(box_data, bot)
     
-    print(bot.dist_travelled)
-    print(bot.cleaned)
-    bot.print_path()
+    print(f"Best from Greedy: {bot.dist_travelled}")
+    
+    new_bot = bot.create_similar()
+    
+    #new_bot = optimize_las_vegas(box_data, new_bot)
+    new_bot = optimize_las_vegas(bot.path, new_bot)
+    print(f"Best from LV: {new_bot.dist_travelled}")
+    print(new_bot.cleaned)
+    new_bot.print_path()

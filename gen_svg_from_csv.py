@@ -74,9 +74,11 @@ def output_loc_csv(csv_data, output_file):
                 if not (math.isnan(pos[0]) or math.isnan(pos[1]) or math.isnan(pos[2])):
                     if (sat[1] == "DEBRIS" and pos[0]<=max_x and pos[0]>=min_x and pos[1]<=max_y and pos[1]>=min_y and pos[2]<=max_z and pos[2]>=min_z):
                         box_count = box_count + 1 
-                    pos1 = scale_xyz(pos)
-                    f.write(f'<circle cx="{pos1[0]}" cy="{pos1[1]}" r="2" fill="{currentcolor}"/>\n')
-                    total_counts += 1
+                    if (pos[2]>=-500 and pos[2]<=500):
+                        pos1 = scale_xyz(pos)
+                        #print(f"{pos}")
+                        f.write(f'<circle cx="{pos1[0]}" cy="{pos1[1]}" r="2" fill="{currentcolor}"/>\n')
+                        total_counts += 1
                     #if (total_counts % 1000 ==0):
                         #print(f"{total_counts} records written")
         earth_r = int (((6378*1000)/50000))
@@ -88,7 +90,7 @@ def output_loc_csv(csv_data, output_file):
         f.write(f'<line x1="1137" y1="992" x2="1137" y2="1008" stroke="black" stroke-width="2"/>')
         f.write("</g>")
         f.write("</svg>")
-        print(f"{box_count}")
+        print(f"{total_counts}")
                 
 
 

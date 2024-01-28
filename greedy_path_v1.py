@@ -80,6 +80,7 @@ def box_sat(csv_data, box_center, box_size):
                 if (sat[1] == "DEBRIS" and pos[0]<=max_x and pos[0]>=min_x and pos[1]<=max_y and pos[1]>=min_y and pos[2]<=max_z and pos[2]>=min_z):
                     box_count.append(sat)
     return box_count
+
 # main 
 if __name__ == "__main__":
     
