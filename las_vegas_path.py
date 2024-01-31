@@ -69,11 +69,12 @@ def gen_greedy_path(box_data, bot):
 if __name__ == "__main__":
     
 
-    if len(sys.argv) != 2:
-        print("Usage: python greedy_path.py input_file")
+    if len(sys.argv) != 3:
+        print("Usage: python las_vegas_path.py input_file output_file")
         sys.exit(1)
 
     input_file = sys.argv[1]
+    output_file = sys.argv[2]
 
     
     #print(input_file)
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     sat_data = satutils.get_sat_data(input_file)
 
     #print(sat_data)
-    bot = bot.Bot(7250, 0, 0, 1000)
+    bot = bot.Bot(7250, 0, 0, 500)
     box_data = satutils.box_sat(sat_data, bot)
 
     bot = gen_greedy_path(box_data, bot)
@@ -91,9 +92,10 @@ if __name__ == "__main__":
     print(f"Best from Greedy: {bot.dist_travelled}")
     
     new_bot = bot.create_similar()
+
     
     #new_bot = optimize_las_vegas(box_data, new_bot)
     new_bot = optimize_las_vegas(bot.path, new_bot)
     print(f"Best from LV: {new_bot.dist_travelled}")
     print(new_bot.cleaned)
-    new_bot.print_path()
+    new_bot.print_path_json(output_file)

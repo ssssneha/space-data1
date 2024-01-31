@@ -1,3 +1,5 @@
+import json
+
 class Satellite:    
     def init(self, id, type, x, y, z):
         self.id = id
@@ -12,4 +14,8 @@ class Satellite:
     
     def __repr__(self) -> str:
         return f"{self.id} {self.type} {self.pos}"
+    
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
     

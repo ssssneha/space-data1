@@ -39,7 +39,6 @@ def scale_xyz(xyz):
     return arr
 
 
-# output_loc_csv - json + output
 def output_loc_csv(csv_data, output_file):
     total_counts = 0
     box_count = 0
@@ -56,31 +55,25 @@ def output_loc_csv(csv_data, output_file):
     with open(output_file, 'w') as f:
         f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000">')
         f.write("<g>")
-        #lightcoral lightseagreen
-        # and sat[1] == "DEBRIS"
         for sat in csv_data:
-            #print(sat)
             if len(sat) == 5:
-                #print(sat)
                 if sat[1] == "DEBRIS":
-                    currentcolor = "lightcoral"
-                elif sat[1] == "PAYLOAD":
-                    currentcolor = "lightseagreen"
-                elif sat[1] == "ROCKET BODY":
                     currentcolor = "gold"
+                elif sat[1] == "PAYLOAD":
+                    currentcolor = "darkturquoise"
+                elif sat[1] == "ROCKET BODY":
+                    currentcolor = "crimson"
                 elif sat[1] == "UNKNOWN":
                     currentcolor = "mediumpurple"
                 pos = get_xyz(sat)
                 if not (math.isnan(pos[0]) or math.isnan(pos[1]) or math.isnan(pos[2])):
                     if (sat[1] == "DEBRIS" and pos[0]<=max_x and pos[0]>=min_x and pos[1]<=max_y and pos[1]>=min_y and pos[2]<=max_z and pos[2]>=min_z):
                         box_count = box_count + 1 
-                    if (pos[2]>=-500 and pos[2]<=500):
-                        pos1 = scale_xyz(pos)
-                        #print(f"{pos}")
-                        f.write(f'<circle cx="{pos1[0]}" cy="{pos1[1]}" r="2" fill="{currentcolor}"/>\n')
-                        total_counts += 1
-                    #if (total_counts % 1000 ==0):
-                        #print(f"{total_counts} records written")
+                    pos1 = scale_xyz(pos)
+                    f.write(f'<circle cx="{pos1[0]}" cy="{pos1[1]}" r="2" fill="{currentcolor}"/>\n')
+                    total_counts += 1
+                if (total_counts % 1000 ==0):
+                    print(f"{total_counts} records written")
         earth_r = int (((6378*1000)/50000))
         
         f.write(f'<circle cx="1000" cy="1000" r="{earth_r}" stroke="black" fill="transparent" stroke-width="2"/>')

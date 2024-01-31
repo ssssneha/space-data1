@@ -1,4 +1,5 @@
 import math
+import json
 
 
 class Bot:
@@ -34,7 +35,18 @@ class Bot:
     def print_path(self):
         for id,sat in enumerate(self.path):
             print(f"{id+1} {sat}")
-        
 
+    def print_path_json(self, output_file):
+        with open(output_file, 'w') as f:
+            f.write(self.pathToJSON())
+        
     def __str__(self):
         return f"BOT {self.pos} {self.b_range} Cleaned {self.cleaned} dist: {self.dist_travelled}"
+    
+    def pathToJSON(self):
+        json_string  = "[\n"
+        for sat in self.path:
+            json_string += sat.toJSON()
+            json_string += ","
+        json_string += "\n]\n"
+        return json_string

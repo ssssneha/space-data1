@@ -30,7 +30,6 @@ def box_sat(sat_data, bot):
     max_z = bot.pos[2] + bot.b_range
     min_z = bot.pos[2] - bot.b_range
     for sat in sat_data:
-        #print(sat)
         if not sat is None:
             pos = sat.pos
             if not (math.isnan(pos[0]) or math.isnan(pos[1]) or math.isnan(pos[2])):

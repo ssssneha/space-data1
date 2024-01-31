@@ -14,7 +14,6 @@ import bot
 
 
 def gen_greedy_path(box_data, bot):
-
     for i in range(len(box_data)):
         min_dist = -1
         best_sat = box_data[0]
@@ -25,7 +24,6 @@ def gen_greedy_path(box_data, bot):
                     min_dist = dist
                     best_sat = sat
 
-        
         if best_sat == None:
             print ("Something bad happened")
             sys.exit()
@@ -38,11 +36,12 @@ def gen_greedy_path(box_data, bot):
 if __name__ == "__main__":
     
 
-    if len(sys.argv) != 2:
-        print("Usage: python greedy_path.py input_file")
+    if len(sys.argv) != 3:
+        print("Usage: python greedy_path.py input_file output_file")
         sys.exit(1)
 
     input_file = sys.argv[1]
+    output_file = sys.argv[2]
 
     
     #print(input_file)
@@ -52,9 +51,10 @@ if __name__ == "__main__":
     sat_data = satutils.get_sat_data(input_file)
 
     #print(sat_data)
-    bot = bot.Bot(7250, 0, 0, 500)
+    bot = bot.Bot(7250, 0, 0, 1000)
     box_data = satutils.box_sat(sat_data, bot)
     bot = gen_greedy_path(box_data, bot)
+    print("Here")
     print(bot.dist_travelled)
     print(bot.cleaned)
-    bot.print_path()
+    bot.print_path_json(output_file)
