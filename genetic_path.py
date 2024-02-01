@@ -146,12 +146,12 @@ if __name__ == "__main__":
     sat_data = satutils.get_sat_data(input_file)
 
     #print(sat_data)
-    bot = bot.Bot(7250, 0, 0, 1000)
+    bot = bot.Bot(7250, 0, 0, 500)
     box_data = satutils.box_sat(sat_data, bot)
 
-    bot = gen_greedy_path(box_data, bot)
+    #bot = gen_greedy_path(box_data, bot)
     
-    print(f"Best from Greedy: {bot.dist_travelled}")
+    #print(f"Best from Greedy: {bot.dist_travelled}")
     
     #new_bot = optimize_las_vegas(box_data, new_bot)
     new_bot = gen_genetic_path(bot)
